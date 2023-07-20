@@ -4,7 +4,7 @@ import Link from "next/link";
 import styles from "./styles.module.css";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export function Header({ children }: { children: React.ReactNode }) {
+export function Header() {
   const { data: session, status } = useSession();
 
   return (
@@ -32,14 +32,13 @@ export function Header({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               className={styles.loginButton}
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
             >
               Acessar
             </button>
           )}
         </section>
       </header>
-      {children}
     </>
   );
 }
