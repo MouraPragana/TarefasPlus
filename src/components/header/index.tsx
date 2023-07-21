@@ -6,7 +6,7 @@ import { redirect, usePathname } from "next/navigation";
 import styles from "./styles.module.css";
 
 export function Header() {
-  const { data: session, status, data } = useSession();
+  const { data: session, status } = useSession();
   const pathName = usePathname();
 
   return pathName !== "/" && status === "loading" ? (
@@ -40,7 +40,7 @@ export function Header() {
         ) : (
           <button
             className={styles.loginButton}
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("", { callbackUrl: "/dashboard" })}
           >
             Acessar
           </button>
