@@ -1,15 +1,14 @@
 import { db } from "@/services/firebaseConnection";
 import { addDoc, collection } from "firebase/firestore";
+import { useSession } from "next-auth/react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Textarea } from "../textarea";
+
 import styles from "./styles.module.css";
-import { Session } from "next-auth";
+import { Textarea } from "../../../components/textarea";
 
-interface IForm {
-  userData: Session | null;
-}
+export function Form() {
+  const { data } = useSession();
 
-export function Form({ userData }: IForm) {
   const [input, setInput] = useState<string>("");
   const [publicTask, setPublicTask] = useState<boolean>(false);
 
@@ -26,7 +25,7 @@ export function Form({ userData }: IForm) {
       await addDoc(collection(db, "tarefas"), {
         tarefa: input,
         created: new Date(),
-        user: userData?.user?.email,
+        user: data?.user?.email,
         public: publicTask,
       });
 

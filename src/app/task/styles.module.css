@@ -1,0 +1,10 @@
+.loadingContainer {
+  width: 100%;
+  height: calc(100vh - 76px);
+  background-color: #0f0f0f;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}

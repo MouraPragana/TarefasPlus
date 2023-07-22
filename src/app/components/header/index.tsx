@@ -2,16 +2,12 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
 import styles from "./styles.module.css";
 
 export function Header() {
-  const { data: session, status } = useSession();
-  const pathName = usePathname();
+  const { data: session } = useSession();
 
-  return pathName !== "/" && status === "loading" ? (
-    <span>Processando...</span>
-  ) : (
+  return (
     <header className={styles.header}>
       <section className={styles.content}>
         <nav className={styles.nav}>
