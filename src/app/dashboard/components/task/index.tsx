@@ -80,36 +80,40 @@ export function Tasks() {
     );
   }
 
-  return tasks.map((task) => (
-    <article key={task.id} className={styles.task}>
-      {task.public && (
-        <div className={styles.tagContainer}>
-          <label className={styles.tag}>PUBLICO</label>
-          <button
-            className={styles.shareButton}
-            onClick={() => handleShare(task.id)}
-          >
-            <FiShare2 size={22} color="#3183ff" />
-          </button>
-        </div>
-      )}
-
-      <div className={styles.taskContent}>
-        {task.public ? (
-          <Link href={`/task/${task.id}`}>
-            <p>{task.tarefa}</p>
-          </Link>
-        ) : (
-          <p>{task.tarefa}</p>
+  if (tasks.length > 0) {
+    return tasks.map((task) => (
+      <article key={task.id} className={styles.task}>
+        {task.public && (
+          <div className={styles.tagContainer}>
+            <label className={styles.tag}>PUBLICO</label>
+            <button
+              className={styles.shareButton}
+              onClick={() => handleShare(task.id)}
+            >
+              <FiShare2 size={22} color="#3183ff" />
+            </button>
+          </div>
         )}
 
-        <button
-          className={styles.trashButton}
-          onClick={() => handleDelete(task.id)}
-        >
-          <FaTrash size={24} color="#ea3140" />
-        </button>
-      </div>
-    </article>
-  ));
+        <div className={styles.taskContent}>
+          {task.public ? (
+            <Link href={`/task/${task.id}`}>
+              <p>{task.tarefa}</p>
+            </Link>
+          ) : (
+            <p>{task.tarefa}</p>
+          )}
+
+          <button
+            className={styles.trashButton}
+            onClick={() => handleDelete(task.id)}
+          >
+            <FaTrash size={24} color="#ea3140" />
+          </button>
+        </div>
+      </article>
+    ));
+  } else {
+    return <span>Não foram encontradas tarefas cadastradas...</span>;
+  }
 }

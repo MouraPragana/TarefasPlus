@@ -3,9 +3,7 @@ import { redirect } from "next/navigation";
 import { db } from "../../../services/firebaseConnection";
 import styles from "./styles.module.css";
 
-import { getServerSession } from "next-auth";
-import { OPTIONS } from "../../api/auth/[...nextauth]/route";
-import { Form } from "./components/form";
+import { Body } from "./components/body";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const docRef = doc(db, "tarefas", params.id);
@@ -35,14 +33,17 @@ async function getData(id: string) {
     id: snapshot.id,
   };
 
-  return task;
+  return {
+    props: {
+      task: task,
+    },
+  };
 }
 
 export default async function Task({ params }: { params: { id: string } }) {
-  const session = await getServerSession(OPTIONS);
   const data = await getData(params.id);
 
-  if (!data?.public && !session) {
+  if (!data?.props.task.public) {
     redirect("/");
   }
 
@@ -51,16 +52,11 @@ export default async function Task({ params }: { params: { id: string } }) {
       <main className={styles.main}>
         <h1>Tarefa</h1>
         <article className={styles.task}>
-          <p>{data?.tarefa}</p>
+          <p>{data?.props.task.tarefa}</p>
         </article>
       </main>
 
-      {session && (
-        <section className={styles.commentsContainer}>
-          <h2>Deixar comentário</h2>
-          <Form taskId={data?.id as string} />
-        </section>
-      )}
+      <Body taskId={data?.props.task.id as string} />
     </div>
   );
 }
