@@ -2,18 +2,26 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./styles.module.css";
 
 export function Header() {
   const { data: session } = useSession();
-  const pathName = usePathname();
+  const pathName = usePathname() as string;
+  const router = useRouter();
 
   return (
     <header className={styles.header}>
       <section className={styles.content}>
         <nav className={styles.nav}>
-          <Link href="/">
+          <Link
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              router.replace("http://localhost:3000/");
+              router.refresh();
+            }}
+          >
             <h1 className={styles.logo}>
               Tarefas <span>+</span>
             </h1>

@@ -5,15 +5,23 @@ import { db } from "../services/firebaseConnection";
 import styles from "../styles/home.module.css";
 import { Header } from "./components/header";
 
-export async function getData() {
+export const revalidate = 1;
+
+async function getData() {
   const tarefasRef = collection(db, "tarefas");
   const tarefasSnapShot = await getDocs(tarefasRef);
 
-  return tarefasSnapShot.size || 0;
+  const commentsRef = collection(db, "comments");
+  const commentsSnapShot = await getDocs(commentsRef);
+
+  return {
+    tarefas: tarefasSnapShot.size || 0,
+    comments: commentsSnapShot.size || 0,
+  };
 }
 
 export default async function Home() {
-  const tarefas = await getData();
+  const data = await getData();
 
   return (
     <>
@@ -35,11 +43,11 @@ export default async function Home() {
 
         <div className={styles.infoContent}>
           <section className={styles.box}>
-            <span>+{tarefas} posts</span>
+            <span>+{data.tarefas} posts</span>
           </section>
 
           <section className={styles.box}>
-            <span>+0 comentários</span>
+            <span>+{data.comments} comentários</span>
           </section>
         </div>
       </main>
