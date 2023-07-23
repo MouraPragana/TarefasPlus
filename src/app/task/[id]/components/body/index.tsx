@@ -1,8 +1,11 @@
 "use client";
 
+import { Box, LinearProgress } from "@mui/material";
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   onSnapshot,
   orderBy,
   query,
@@ -14,7 +17,6 @@ import { db } from "../../../../../services/firebaseConnection";
 import { Textarea } from "../../../../components/textarea";
 import { Comments } from "../comments";
 import styles from "./styles.module.css";
-import { Box, LinearProgress } from "@mui/material";
 
 interface IForm {
   taskId: string;
@@ -73,7 +75,7 @@ export function Body({ taskId }: IForm) {
     if (input === "") return;
 
     try {
-      const docRef = await addDoc(collection(db, "comments"), {
+      await addDoc(collection(db, "comments"), {
         comment: input,
         created: new Date(),
         user: session?.user?.email,
@@ -85,6 +87,11 @@ export function Body({ taskId }: IForm) {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async function handleCommentDelete(id: string) {
+    const docRef = doc(db, "comments", id);
+    await deleteDoc(docRef);
   }
 
   return (
@@ -111,7 +118,10 @@ export function Body({ taskId }: IForm) {
             <LinearProgress color="inherit" />
           </Box>
         ) : (
-          <Comments comments={comments} />
+          <Comments
+            comments={comments}
+            handleCommentDelete={handleCommentDelete}
+          />
         )}
       </section>
     </>

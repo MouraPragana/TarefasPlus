@@ -2,10 +2,12 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./styles.module.css";
 
 export function Header() {
   const { data: session } = useSession();
+  const pathName = usePathname();
 
   return (
     <header className={styles.header}>
@@ -27,7 +29,7 @@ export function Header() {
             className={styles.loginButton}
             onClick={() =>
               signOut({
-                callbackUrl: "/",
+                callbackUrl: pathName.match("/task/") ? pathName : "/",
               })
             }
           >
@@ -36,7 +38,11 @@ export function Header() {
         ) : (
           <button
             className={styles.loginButton}
-            onClick={() => signIn("", { callbackUrl: "/dashboard" })}
+            onClick={() =>
+              signIn("", {
+                callbackUrl: pathName === "/" ? "/dashboard" : pathName,
+              })
+            }
           >
             Acessar
           </button>

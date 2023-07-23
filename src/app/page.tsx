@@ -1,9 +1,20 @@
-import styles from "../styles/home.module.css";
+import { collection, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import heroImg from "../../public/assets/hero.png";
+import { db } from "../services/firebaseConnection";
+import styles from "../styles/home.module.css";
 import { Header } from "./components/header";
 
-export default function Home() {
+export async function getData() {
+  const tarefasRef = collection(db, "tarefas");
+  const tarefasSnapShot = await getDocs(tarefasRef);
+
+  return tarefasSnapShot.size || 0;
+}
+
+export default async function Home() {
+  const tarefas = await getData();
+
   return (
     <>
       <Header />
@@ -24,11 +35,11 @@ export default function Home() {
 
         <div className={styles.infoContent}>
           <section className={styles.box}>
-            <span>+12 posts</span>
+            <span>+{tarefas} posts</span>
           </section>
 
           <section className={styles.box}>
-            <span>+90 comentários</span>
+            <span>+0 comentários</span>
           </section>
         </div>
       </main>
